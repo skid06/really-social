@@ -1,0 +1,26 @@
+version: "3.8"
+
+services:
+  backend:
+    build: ./backend
+    container_name: laravel-backend
+    ports:
+      - "8000:8000"
+    volumes:
+      - ./backend:/var/www
+    networks:
+      - app-network
+
+  frontend:
+    build: ./frontend
+    container_name: vue-frontend
+    ports:
+      - "3000:3000"
+    networks:
+      - app-network
+    stdin_open: true
+    tty: true
+
+networks:
+  app-network:
+    driver: bridge
