@@ -26,7 +26,7 @@ backend/public/css/
 
 # === Vue / Quasar ===
 
-/frontend/node_modules/
+frontend/node_modules/
 frontend/.quasar/
 frontend/dist/
 frontend/.env
