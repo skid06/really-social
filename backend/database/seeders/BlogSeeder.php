@@ -13,22 +13,33 @@ class BlogSeeder extends Seeder
      */
     public function run(): void
     {
-        // Create a default user if none exists
-        if (User::count() === 0) {
-            User::factory()->create([
-                'name' => 'Test User',
-                'email' => 'test@example.com',
-                'password' => bcrypt('password')
-            ]);
-        }
+        // Create 10 users
+        $users = User::factory()->count(10)->create();
 
-        // Create 25 random blogs
-        Blog::factory()->count(25)->create();
+        // Helper to assign a random user
+        $assignUser = function ($blog) use ($users) {
+            $blog->created_by = $users->random()->id;
+            $blog->save();
+        };
+
+        // Create 25 general blogs
+        Blog::factory()
+            ->count(25)
+            ->create()
+            ->each($assignUser);
 
         // Create 10 published blogs
-        Blog::factory()->count(10)->published()->create();
+        Blog::factory()
+            ->count(10)
+            ->published()
+            ->create()
+            ->each($assignUser);
 
         // Create 5 hidden blogs
-        Blog::factory()->count(5)->hidden()->create();
+        Blog::factory()
+            ->count(5)
+            ->hidden()
+            ->create()
+            ->each($assignUser);
     }
 }
