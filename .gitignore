@@ -3,7 +3,6 @@
 /backend/vendor/
 /backend/node_modules/
 backend/.env
-backend/.env.*
 backend/.phpunit.result.cache
 backend/storage/
 backend/bootstrap/cache/
