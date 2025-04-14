@@ -23,12 +23,12 @@ RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local
 # Copy Laravel app
 COPY . .
 
-# Install PHP dependencies
-RUN composer install
-
 # Set correct permissions
 RUN chown -R www-data:www-data /var/www \
-    && chmod -R 775 storage bootstrap/cache
+    && chmod -R 775 /var/www/storage /var/www/bootstrap/cache
+
+# Install PHP dependencies
+RUN composer install
 
 # No CMD needed — PHP-FPM runs by default
 COPY docker-entrypoint.sh /usr/local/bin/docker-entrypoint.sh
