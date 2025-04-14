@@ -4,7 +4,7 @@ This project combines Laravel (backend API) with Quasar/Vue.js (frontend) to cre
 
 ## Features
 
-- Laravel Passport API Authentication
+- Laravel Sanctum API Authentication
 - Blog Management (CRUD operations)
 - Blog status management (publish/hide)
 - Blog archiving (soft delete)
@@ -23,95 +23,21 @@ This project combines Laravel (backend API) with Quasar/Vue.js (frontend) to cre
 
 ### Option 1: Docker Setup
 
-```bash
+````bash
 git clone https://github.com/skid06/really-social.git
 cd really-social
-```
-
-The project includes a Docker Compose configuration for easy setup:
-
-```yaml
-version: "3.8"
-services:
-  backend:
-    build: ./backend
-    container_name: laravel-backend
-    ports:
-      - "8000:8000"
-    volumes:
-      - ./backend:/var/www
-    depends_on:
-      - mysql
-    networks:
-      - app-network
-    environment:
-      DB_HOST: mysql
-      DB_PORT: 3306
-      DB_DATABASE: laravel_quasar_blog
-      DB_USERNAME: laravel
-      DB_PASSWORD: secret
-
-  frontend:
-    build: ./frontend
-    container_name: vue-frontend
-    ports:
-      - "3000:3000"
-    networks:
-      - app-network
-    stdin_open: true
-    tty: true
-
-  mysql:
-    image: mysql:8.0
-    container_name: mysql-db
-    restart: unless-stopped
-    ports:
-      - "3306:3306"
-    environment:
-      MYSQL_DATABASE: laravel_quasar_blog
-      MYSQL_USER: laravel
-      MYSQL_PASSWORD: secret
-      MYSQL_ROOT_PASSWORD: secret
-      SERVICE_TAGS: dev
-      SERVICE_NAME: mysql
-    volumes:
-      - mysql_data:/var/lib/mysql
-    networks:
-      - app-network
-
-volumes:
-  mysql_data:
-
-networks:
-  app-network:
-    driver: bridge
-```
 
 Start the application using Docker Compose:
 
 ```bash
-docker-compose up -d
-```
+docker-compose up --build
 
-To run database migrations and seeds in Docker:
-
-```bash
-# Access the Laravel container
-docker exec -it laravel-backend bash
-
-# Inside the container, run migrations and seeds
-php artisan migrate --seed
-
-# If you want to run specific seeders
-php artisan db:seed --class=UsersTableSeeder
-php artisan db:seed --class=BlogsTableSeeder
-```
+````
 
 Access the containerized application at:
 
 - Laravel API: http://localhost:8000
 - Quasar Frontend: http://localhost:3000
-- MySQL Database: localhost:3306 (accessible from host machine)
 
 ### Option 2: Manual Setup
 
@@ -131,17 +57,7 @@ composer install
 cp .env.example .env
 # Generate application key
 php artisan key:generate
-# Configure database connection in .env file
-# DB_CONNECTION=mysql
-# DB_HOST=127.0.0.1
-# DB_PORT=3306
-# DB_DATABASE=laravel_quasar_blog
-# DB_USERNAME=root
-# DB_PASSWORD=
-# Run migrations with seed data
 php artisan migrate --seed
-# Install Laravel Passport
-php artisan passport:install
 # Create a test user (if not using seeders)
 php artisan tinker
 >>> \App\Models\User::factory()->create(['email' => 'test@example.com', 'password' => bcrypt('password')]);
@@ -163,9 +79,11 @@ npm run dev
 
 ```bash
 # In the Laravel root directory (in a separate terminal)
+cd backend
 php artisan serve
 # In the frontend directory
-npm run dev
+cd frontend
+quasar dev
 ```
 
 The application will be available at:
@@ -212,15 +130,11 @@ php artisan db:seed --class=UsersTableSeeder
 php artisan db:seed --class=BlogsTableSeeder
 ```
 
-After seeding, you can log in with the following default credentials:
-
-- Email: admin@example.com
-- Password: password
-
 ## Usage
 
-1. Login with your test user credentials
-2. After login, you'll be redirected to the blog management page where you can:
+1. Register with your credential details
+2. Login with your test user credentials
+3. After login, you'll be redirected to the blog management page where you can:
    - View all blogs
    - Search blogs by title
    - Add new blogs
