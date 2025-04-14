@@ -36,3 +36,5 @@ RUN chmod +x /usr/local/bin/docker-entrypoint.sh
 
 ENTRYPOINT ["/usr/local/bin/docker-entrypoint.sh"]
 
+# Expose PHP-FPM port
+EXPOSE 9000

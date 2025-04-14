@@ -23,10 +23,6 @@ done
 
 echo "✅ MySQL is up - running Laravel setup"
 
-# Clear caches
-#php artisan config:clear
-#php artisan cache:clear
-
 # Make sure storage directories are writable
 echo "📁 Setting permissions..."
 chmod -R 777 storage bootstrap/cache
@@ -38,6 +34,13 @@ php artisan migrate --force --verbose
 echo "🌱 Seeding database..."
 php artisan db:seed --force --verbose
 
+# Clear caches
+php artisan config:clear
+php artisan cache:clear
+
 # Start the server
 echo "🚀 Starting Laravel server..."
-php artisan serve --host=0.0.0.0 --port=8000
+#php artisan serve --host=0.0.0.0 --port=8000
+
+# Then start PHP-FPM
+exec php-fpm
