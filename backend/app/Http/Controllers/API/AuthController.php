@@ -20,7 +20,7 @@ class AuthController extends Controller
             'password' => Hash::make($request->password),
         ]);
 
-        $token = $user->createToken('BlogApp')->accessToken;
+        $token = $user->createToken('BlogApp')->plainTextToken;
 
         return response()->json([
             'success' => true,
@@ -33,7 +33,7 @@ class AuthController extends Controller
     {
         if (Auth::attempt($request->only('email', 'password'))) {
             $user = Auth::user();
-            $token = $user->createToken('BlogApp')->accessToken;
+            $token = $user->createToken('BlogApp')->plainTextToken;
 
             return response()->json([
                 'success' => true,
@@ -54,7 +54,8 @@ class AuthController extends Controller
     public function logout()
     {
         if (Auth::check()) {
-            Auth::user()->token()->revoke();
+            Auth::user()->currentAccessToken()->delete();
+
             return response()->json([
                 'success' => true,
                 'message' => 'Successfully logged out'

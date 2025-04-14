@@ -14,9 +14,9 @@ Route::post('/login', [AuthController::class, 'login']);
 Route::get('/login', function () {
     return response()->json(['message' => 'Hello']);
 });
-Route::middleware('auth:api')->post('/logout', [AuthController::class, 'logout']);
+Route::middleware('auth:sanctum')->post('/logout', [AuthController::class, 'logout']);
 
-Route::middleware('auth:api')->group(function () {
+Route::middleware('auth:sanctum')->group(function () {
     // Auth
     Route::post('logout', [AuthController::class, 'logout']);
 

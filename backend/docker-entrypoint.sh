@@ -31,6 +31,16 @@ chmod -R 777 storage bootstrap/cache
 echo "🗄️ Running migrations..."
 php artisan migrate --force --verbose
 
+# Only run passport:install if tables don't exist
+# if php artisan db:query "SELECT * FROM oauth_clients WHERE personal_access_client = 1\G" | grep -q 'id'; then
+#   echo "🔑 Creating personal access client..."
+#   # php artisan passport:install --force
+#   php artisan install:api --passport
+#   php artisan passport:keys
+# else
+#   echo "✅ Personal access client already exists"
+# fi
+
 echo "🌱 Seeding database..."
 php artisan db:seed --force --verbose
 
