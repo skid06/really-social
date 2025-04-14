@@ -1,0 +1,35 @@
+{
+  "version": "0.2",
+  "language": "en",
+  "words": [
+    "axios",
+    "vuex",
+    "vite",
+    "quasar",
+    "laravel",
+    "inertia",
+    "middleware",
+    "artisan",
+    "npm",
+    "devtools",
+    "CHOKIDAR_USEPOLLING"
+  ],
+  "ignorePaths": [
+    "node_modules",
+    "dist",
+    "public",
+    "vendor",
+    "build",
+    ".git",
+    ".vscode",
+    ".idea",
+    "package-lock.json",
+    "yarn.lock",
+    "composer.lock"
+  ],
+  "ignoreWords": [
+    // words you want ignored but not necessarily added to the base list
+  ],
+  "dictionaries": ["typescript", "node", "html", "css", "php"],
+  "enableFiletypes": [".js", ".ts", ".vue", ".php", ".json", ".env"]
+}

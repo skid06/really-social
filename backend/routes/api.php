@@ -11,6 +11,9 @@ Route::get('/user', function (Request $request) {
 
 Route::post('/register', [AuthController::class, 'register']);
 Route::post('/login', [AuthController::class, 'login']);
+Route::get('/login', function () {
+    return response()->json(['message' => 'Hello']);
+});
 Route::middleware('auth:api')->post('/logout', [AuthController::class, 'logout']);
 
 Route::middleware('auth:api')->group(function () {
