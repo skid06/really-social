@@ -1,14 +1,20 @@
 #!/bin/sh
-set -e  # Exit immediately if a command exits with a non-zero status
+set -e
+
+# Ensure .env exists
+if [ ! -f .env ]; then
+  echo "📄 .env not found. Copying from .env.example..."
+  cp .env.example .env
+fi
 
 # Create necessary Laravel directories
 mkdir -p /var/www/bootstrap/cache /var/www/storage
 chmod -R 775 /var/www/bootstrap/cache /var/www/storage
 
-# Install dependencies if needed
-if [ ! -d "vendor" ]; then
+# Install dependencies if not already installed
+if [ ! -f vendor/autoload.php ]; then
   echo "📦 Installing Composer dependencies..."
-  composer install --no-interaction
+  composer install --no-interaction --prefer-dist --optimize-autoloader
 fi
 
 # Wait for MySQL to be ready
@@ -27,34 +33,28 @@ done
 
 echo "✅ MySQL is up - running Laravel setup"
 
-# Make sure storage directories are writable
+# Set permissions
 echo "📁 Setting permissions..."
 chmod -R 777 storage bootstrap/cache
 
-# Run migrations and seeding
-echo "🗄️ Running migrations..."
-php artisan migrate --force --verbose
+# Check if the migrations table exists before running migrate
+echo "🔍 Checking if database is already migrated..."
+TABLE_COUNT=$(mysql -h"$DB_HOST" -u"$DB_USERNAME" -p"$DB_PASSWORD" -D"$DB_DATABASE" -e "SHOW TABLES;" | wc -l)
 
-# Only run passport:install if tables don't exist
-# if php artisan db:query "SELECT * FROM oauth_clients WHERE personal_access_client = 1\G" | grep -q 'id'; then
-#   echo "🔑 Creating personal access client..."
-#   # php artisan passport:install --force
-#   php artisan install:api --passport
-#   php artisan passport:keys
-# else
-#   echo "✅ Personal access client already exists"
-# fi
+if [ "$TABLE_COUNT" -le 1 ]; then
+  echo "🗄️ No tables found. Running migrations..."
+  php artisan migrate --force --verbose
 
-echo "🌱 Seeding database..."
-php artisan db:seed --force --verbose
+  echo "🌱 Seeding database..."
+  php artisan db:seed --force --verbose
+else
+  echo "✅ Tables already exist. Skipping migrations and seed."
+fi
 
 # Clear caches
 php artisan config:clear
 php artisan cache:clear
 
-# Start the server
+# Start PHP-FPM
 echo "🚀 Starting Laravel server..."
-#php artisan serve --host=0.0.0.0 --port=8000
-
-# Then start PHP-FPM
 exec php-fpm
