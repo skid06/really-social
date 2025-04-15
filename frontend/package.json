@@ -12,7 +12,8 @@
     "test": "echo \"No test specified\" && exit 0",
     "dev": "quasar dev",
     "build": "quasar build",
-    "postinstall": "quasar prepare"
+    "postinstall": "echo 'Skipping quasar prepare'",
+    "prepare": "quasar prepare"
   },
   "dependencies": {
     "axios": "^1.2.1",

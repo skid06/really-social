@@ -1,6 +1,10 @@
 #!/bin/sh
 set -e  # Exit immediately if a command exits with a non-zero status
 
+# Create necessary Laravel directories
+mkdir -p /var/www/bootstrap/cache /var/www/storage
+chmod -R 775 /var/www/bootstrap/cache /var/www/storage
+
 # Install dependencies if needed
 if [ ! -d "vendor" ]; then
   echo "📦 Installing Composer dependencies..."
