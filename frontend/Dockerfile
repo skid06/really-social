@@ -1,0 +1,10 @@
+FROM node:18
+
+WORKDIR /app
+
+COPY . .
+
+RUN npm install -g @quasar/cli
+RUN npm install
+
+CMD ["quasar", "dev", "--hostname", "0.0.0.0", "--port", "3000"]
